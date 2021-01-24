@@ -1,8 +1,11 @@
-const forms = () => {
+import checkNumInputs from './checkNumInputs';
+import closeModals from './closeModals';
+
+const forms = (state) => {
     // Получение всех форм с инпутами
     const form = document.querySelectorAll('form'),
           input = document.querySelectorAll('input'),
-          phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+          popup = document.querySelectorAll('[data-modal]');
 
     // Сообщения для пользователя
     const message = {
@@ -12,11 +15,7 @@ const forms = () => {
     };
 
     // Валидация полей с телефоном (ввод только цифр)
-    phoneInputs.forEach(item => {
-        item.addEventListener('input' , () => {
-            item.value = item.value.replace(/\D/, '');
-        });
-    });
+    checkNumInputs('input[name="user_phone"]');
 
     // Функция для отправки запроса на сервер
     const postData = async (url, data) => {
@@ -40,13 +39,22 @@ const forms = () => {
     form.forEach( item => {
         item.addEventListener('submit', (e) => {
             e.preventDefault();
-
+            
+            // Создание блока для вывода статуса отправки формы
             let statusMessage = document.createElement('div');
             statusMessage.classList.add('status');
             item.appendChild(statusMessage);
 
             const formData = new FormData(item);
 
+            // Добавление деталей заказа к отправляемой форме
+            if(item.getAttribute('data-calc') === 'end') {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
+
+            // Отправка данных
             postData('assets/server.php', formData)
                 .then(res => {
                     console.log(res);
@@ -58,6 +66,9 @@ const forms = () => {
                     setTimeout(() => {
                         statusMessage.remove();
                     }, 5000);
+                    setTimeout(() => {
+                        closeModals(popup);
+                    }, 7000);
                 });
         });
     });

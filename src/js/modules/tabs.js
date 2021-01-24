@@ -1,4 +1,4 @@
-const tabs = (tabItemBoxSelector, tabItemSelector, tabContentSelector, activeSelector) => {
+const tabs = (tabItemBoxSelector, tabItemSelector, tabContentSelector, activeSelector, display = 'block') => {
 
         const tabItemBox = document.querySelector(tabItemBoxSelector),
               tabItem = document.querySelectorAll(tabItemSelector),
@@ -17,7 +17,7 @@ const tabs = (tabItemBoxSelector, tabItemSelector, tabContentSelector, activeSel
     
         // Показать контент активной табы
         function showTabContent(i = 0) {
-            tabContent[i].style.display = 'block';
+            tabContent[i].style.display = display;
             tabItem[i].classList.add(activeSelector);
         }
 
