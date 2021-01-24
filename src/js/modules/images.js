@@ -1,10 +1,13 @@
+import calcScroll from './calcScroll';
+
 const images = () => {
 
     // Создание блока модального изображения
     const imgPopup = document.createElement('div'),
         workSection = document.querySelector('.works'),
         // Создание модального изображения
-        bigImage = document.createElement('img');
+        bigImage = document.createElement('img'),
+        scroll = calcScroll();
 
     // Стилизация и добавление в вёрстку модального изображения
     imgPopup.classList.add('popup');
@@ -33,12 +36,14 @@ const images = () => {
             const path = target.parentNode.getAttribute('href');
             bigImage.setAttribute('src', path);
             document.body.style.overflow = 'hidden';
+            document.body.style.marginRight = `${scroll}px`;
         }
 
         // Закрытие изображения при клике на подложку
         if (target && target.matches('div.popup')) {
             imgPopup.style.display = 'none';
             document.body.style.overflow = '';
+            document.body.style.marginRight = `0px`;
         }
     });
 };
